@@ -1,0 +1,30 @@
+# Edge Function settings. Webhooks and the cron job authenticate with their
+# own shared secrets, so they do not require a user JWT.
+[functions.payment-webhook]
+verify_jwt = false
+
+[functions.commission-engine]
+verify_jwt = false
+
+[functions.shipment-update]
+verify_jwt = false
+
+[functions.track-click]
+verify_jwt = false
+
+# create-order accepts guests (anon key) and signed-in buyers.
+[functions.create-order]
+verify_jwt = false
+
+# cms-upload checks the caller's own token and admin role inside the function.
+[functions.cms-upload]
+verify_jwt = true
+
+[functions.shipping]
+verify_jwt = true
+
+[functions.notify-dispatch]
+verify_jwt = false
+
+[functions.health]
+verify_jwt = false

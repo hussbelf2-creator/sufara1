@@ -1,0 +1,46 @@
+# Monthly restore drill: downloads the latest backup, restores it into a
+# throw-away PostgreSQL in the runner, and verifies counts, ledger balance and
+# the invoice hash chain. The result is recorded in production job_runs, so
+# "System health" warns if no drill passed in 35 days.
+name: restore-drill
+on:
+  schedule:
+    - cron: '41 1 3 * *'    # 3rd of each month, 04:41 Riyadh
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  drill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    services:
+      postgres:
+        image: postgres:17
+        env: { POSTGRES_PASSWORD: drill }
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: PostgreSQL client
+        run: |
+          sudo install -d /usr/share/postgresql-common/pgdg
+          sudo curl -fsSo /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client-17
+      - name: Latest backup
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ENDPOINT_URL: ${{ secrets.AWS_ENDPOINT_URL }}
+        run: |
+          LATEST=$(aws s3 ls "s3://${{ secrets.BACKUP_S3_BUCKET }}/daily/" | awk '{print $2}' | sort | tail -1)
+          aws s3 cp --recursive "s3://${{ secrets.BACKUP_S3_BUCKET }}/daily/$LATEST" ./drill-src/
+      - name: Restore and verify
+        env:
+          DRILL_DB_URL: postgresql://postgres:drill@localhost:5432/postgres
+          BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: PATH=/usr/lib/postgresql/17/bin:$PATH bash scripts/backup/restore-drill.sh ./drill-src

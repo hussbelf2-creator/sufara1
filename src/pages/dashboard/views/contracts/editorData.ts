@@ -1,0 +1,45 @@
+import type { Contract } from './types';
+
+export type ContractPrefill = { factory?: string; buyer?: string; product?: string };
+
+/* Builds a blank contract (used when creating a new one from the editor or from
+   a wholesale deal). All text fields start empty and are filled by the user. */
+export const makeBlankContract = (prefill?: ContractPrefill): Contract => ({
+  id: `CT-${Date.now().toString().slice(-6)}`,
+  status: 'draft',
+  stage: 'draft',
+  awaitingHours: 0,
+  signBuyer: false,
+  signFactory: false,
+  buyer: prefill?.buyer ?? '',
+  buyerCompany: '',
+  buyerCountry: '',
+  factory: prefill?.factory ?? '',
+  factoryCity: '',
+  product: prefill?.product ?? '',
+  quantity: '',
+  unitPrice: '',
+  total: '',
+  currency: 'SAR',
+  payment: '',
+  incoterm: 'CIF',
+  port: '',
+  leadDays: '',
+  deliveryDate: '',
+  createdAt: '',
+  updatedAt: '',
+  startDate: '',
+  endDate: '',
+  duration: '',
+  autoRenew: false,
+  obligations: [],
+  payments: [],
+  penalty: '',
+  notes: '',
+  specs: [{ label: '', value: '' }],
+  clauses: [],
+  images: [],
+  attachments: [],
+  comments: [],
+  revisions: [],
+});

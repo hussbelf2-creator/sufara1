@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Urdu uses letters (ٹ ڈ ڑ ں ھ ے) that Tajawal lacks; Noto Naskh Arabic fills
+   those glyphs without changing the look of the rest of the page. */
+html[lang='ur'] body,
+html[lang='ur'] button,
+html[lang='ur'] input,
+html[lang='ur'] select,
+html[lang='ur'] textarea {
+  font-family: 'Tajawal', 'Noto Naskh Arabic', 'IBM Plex Sans Arabic', sans-serif;
+}
+
+/* Language switcher — inherits the surrounding colour so it reads well both on
+   the dark video hero and on the light store header. */
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  line-height: 1;
+  color: inherit;
+  white-space: nowrap;
+}
+.lang-switch > i {
+  font-size: 15px;
+  opacity: 0.8;
+}
+.lang-switch button {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 2px 4px;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.55;
+  font-weight: 500;
+  border-radius: 6px;
+  transition: opacity 0.2s ease;
+}
+.lang-switch button:hover {
+  opacity: 0.85;
+}
+.lang-switch button.is-on {
+  opacity: 1;
+  font-weight: 700;
+}
+.lang-switch .sep {
+  opacity: 0.3;
+}
+.lang-switch .lang-cur {
+  appearance: none;
+  background: transparent;
+  border: 1px solid currentColor;
+  border-radius: 6px;
+  color: inherit;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 6px;
+  opacity: 0.7;
+  cursor: pointer;
+}
+.lang-switch .lang-cur:focus-visible,
+.lang-switch button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+  opacity: 1;
+}
+.lang-switch .lang-cur option {
+  color: #0f2a1d;
+}
+.lang-switch.in-menu {
+  padding: 12px 2px;
+  font-size: 15px;
+}

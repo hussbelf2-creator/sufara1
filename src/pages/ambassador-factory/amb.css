@@ -1,0 +1,201 @@
+/* Ambassador marketing landing page — /f/:amb/:factory
+   Reuses the global store design tokens (--bg, --surface, --accent, …) so it
+   stays on-theme through palette regeneration and matches the storefront. */
+
+.amb-shell { position: relative; }
+
+/* Ambassador identity strip sitting under the store nav. */
+.amb-strip {
+  position: relative;
+  z-index: 30;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  border-bottom: 1px solid var(--line);
+}
+.amb-strip-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  flex-wrap: wrap;
+}
+.amb-id { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.amb-id .av {
+  width: 44px; height: 44px; border-radius: 999px;
+  display: grid; place-items: center;
+  background: var(--grad-brand);
+  color: #fff; font-weight: 700; font-size: 15px; flex-shrink: 0;
+}
+.amb-id .who { font-size: 14px; color: var(--text); display: flex; align-items: center; gap: 6px; }
+.amb-id .who b { font-weight: 700; }
+.amb-id .who i { color: var(--accent); }
+.amb-id .sub { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+
+/* Hero. */
+.amb-hero {
+  position: relative;
+  min-height: clamp(430px, 46vw, 570px);
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+.amb-hero.is-short { min-height: clamp(330px, 34vw, 410px); }
+.amb-hero > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.amb-hero-mask {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, #1c1712 30%, transparent) 0%,
+    color-mix(in srgb, #1c1712 44%, transparent) 55%,
+    color-mix(in srgb, #1c1712 76%, transparent) 100%
+  );
+}
+.amb-hero .inner {
+  position: relative; z-index: 2;
+  padding-top: 60px; padding-bottom: 54px;
+  color: #fff; display: flex; flex-direction: column; gap: 14px;
+  max-width: 760px; width: 100%;
+}
+.amb-hero.is-short .inner { padding-top: 40px; padding-bottom: 40px; }
+.amb-kicker {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 600; margin: 0; width: fit-content;
+  color: #fff; background: color-mix(in srgb, #fff 16%, transparent);
+  padding: 6px 14px; border-radius: 999px;
+  border: 1px solid color-mix(in srgb, #fff 26%, transparent);
+}
+.amb-hero h1 { font-size: clamp(28px, 4vw, 48px); line-height: 1.16; margin: 0; color: #fff; }
+.amb-hero .amb-lead {
+  font-size: clamp(15px, 1.4vw, 18px); line-height: 1.8; margin: 0; max-width: 62ch;
+  color: color-mix(in srgb, #fff 90%, transparent);
+}
+.amb-code {
+  display: inline-flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  background: color-mix(in srgb, #fff 94%, transparent);
+  border-radius: 16px; padding: 12px 14px 12px 20px; margin-top: 6px;
+  width: fit-content;
+}
+.amb-code .lbl { display: block; font-size: 12px; color: var(--muted); }
+.amb-code .val {
+  font-size: 20px; font-weight: 800; letter-spacing: .08em;
+  color: var(--text); font-variant-numeric: tabular-nums;
+}
+.amb-codehint {
+  font-size: 12.5px; margin: 0; display: flex; align-items: center; gap: 6px;
+  color: color-mix(in srgb, #fff 84%, transparent);
+}
+
+/* Guarantee strip. */
+.amb-trust { background: var(--surface); border-bottom: 1px solid var(--line); }
+.amb-trust-grid {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px; padding: 26px 0;
+}
+.amb-trust .it { display: flex; gap: 12px; align-items: flex-start; }
+.amb-trust .it > i { font-size: 22px; color: var(--accent); margin-top: 2px; }
+.amb-trust .it .t { font-size: 14px; font-weight: 700; color: var(--text); }
+.amb-trust .it .s { font-size: 12.5px; color: var(--muted); margin-top: 3px; line-height: 1.6; }
+
+/* Compact attribution-confirmation panel shown to the shopper. */
+.amb-confirm {
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg));
+  border-bottom: 1px solid var(--line);
+}
+.amb-confirm-inner {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 0; flex-wrap: wrap;
+}
+.amb-confirm .ic {
+  width: 44px; height: 44px; flex-shrink: 0;
+  display: grid; place-items: center; border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 16%, var(--bg));
+  color: var(--accent); font-size: 22px;
+}
+.amb-confirm .body { flex: 1 1 240px; min-width: 0; }
+.amb-confirm .body .t { font-size: 14px; font-weight: 700; color: var(--text); }
+.amb-confirm .body .s { font-size: 12.5px; color: var(--muted); margin-top: 3px; line-height: 1.6; }
+.amb-confirm .who {
+  display: inline-flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 14px; padding: 10px 14px;
+}
+.amb-confirm .who .lbl { font-size: 12px; color: var(--muted); }
+.amb-confirm .who .val {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 13.5px; font-weight: 700; color: var(--text);
+}
+.amb-confirm .who .val i { color: var(--accent); }
+.amb-confirm .who .code {
+  font-size: 13px; font-weight: 800; letter-spacing: .06em; color: var(--accent);
+  padding-inline-start: 12px; border-inline-start: 1px solid var(--line);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Story. */
+.amb-story {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 42px; align-items: center;
+}
+.amb-story-media { border-radius: 18px; overflow: hidden; border: 1px solid var(--line); }
+.amb-story-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.amb-story h2 { font-size: clamp(22px, 2.6vw, 32px); margin: 8px 0 14px; }
+.amb-story p { font-size: 14.5px; line-height: 1.9; color: color-mix(in srgb, var(--text) 84%, var(--muted)); }
+.amb-story .eyebrow { font-size: 13px; font-weight: 600; color: var(--accent2); margin: 0; }
+
+/* Attribution explainer. */
+.amb-attr {
+  display: grid; grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 40px; align-items: start;
+}
+.amb-attr h2 { font-size: clamp(22px, 2.6vw, 30px); margin: 0 0 14px; }
+.amb-attr p { font-size: 14.5px; line-height: 1.9; color: color-mix(in srgb, var(--text) 84%, var(--muted)); }
+.amb-badges { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+.amb-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg));
+  color: var(--text); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.amb-badge i { color: var(--accent); }
+
+.amb-codecard { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 22px; }
+.amb-codecard .lbl { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+.amb-codecard .val {
+  font-size: 24px; font-weight: 800; letter-spacing: .08em; color: var(--accent);
+  font-variant-numeric: tabular-nums; margin-bottom: 14px;
+}
+.amb-codecard .st-btn { width: 100%; justify-content: center; }
+
+/* Section head. */
+.amb-section-head {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 18px; margin-bottom: 26px; flex-wrap: wrap;
+}
+.amb-section-head h2 { font-size: clamp(22px, 2.6vw, 30px); margin: 0 0 6px; }
+.amb-section-head .sub { font-size: 14px; color: var(--muted); }
+
+/* CTA. */
+.amb-cta { background: var(--grad-soft); border-top: 1px solid var(--line); }
+.amb-cta-inner { text-align: center; padding: clamp(46px, 6vw, 84px) 0; max-width: 720px; margin: 0 auto; }
+.amb-cta-inner h2 { font-size: clamp(24px, 3vw, 36px); margin: 0 0 12px; }
+.amb-cta-inner p { font-size: 15px; color: var(--muted); line-height: 1.8; margin: 0 auto 22px; max-width: 52ch; }
+
+/* Copy feedback toast. */
+.amb-toast {
+  position: fixed; inset-inline: 0; bottom: 28px; margin: 0 auto;
+  width: fit-content; z-index: 60;
+  display: flex; align-items: center; gap: 10px;
+  background: var(--text); color: var(--bg);
+  padding: 12px 20px; border-radius: 999px; font-size: 14px;
+}
+.amb-toast i { color: var(--accent2); }
+
+@media (max-width: 1023px) {
+  .amb-trust-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .amb-story { grid-template-columns: 1fr; gap: 24px; }
+  .amb-attr { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .amb-trust-grid { grid-template-columns: 1fr; }
+}

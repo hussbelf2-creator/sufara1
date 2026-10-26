@@ -1,0 +1,40 @@
+# Every push / PR: type-check, lint, unit tests, Edge Function tests, and the
+# twelve database suites against a real PostgreSQL.
+name: ci
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci
+      - run: npm run type-check
+      - run: npx eslint src
+      - run: npm test
+      - run: npm run build
+  functions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with: { deno-version: v2.x }
+      - run: cd supabase/functions && deno check */index.ts && deno test --allow-net --allow-env _shared/
+  database:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env: { POSTGRES_PASSWORD: ci }
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
+      - run: supabase/tests/run.sh | tee result.txt && test "$(grep -c PASSED result.txt)" -eq 12
+        env: { PGHOST: localhost, PGPORT: 5432, PGUSER: postgres, PGPASSWORD: ci }

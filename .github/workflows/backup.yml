@@ -1,0 +1,44 @@
+# Nightly encrypted off-site backup → S3-compatible storage (separate account
+# from the production project). Secrets (Settings → Secrets → Actions):
+#   SUPABASE_DB_URL, BACKUP_PASSPHRASE, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY,
+#   BACKUP_S3_BUCKET, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION
+#   (and AWS_ENDPOINT_URL for Cloudflare R2 / Wasabi / other S3-compatible)
+name: backup
+on:
+  schedule:
+    - cron: '17 23 * * *'   # 02:17 Riyadh
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci --ignore-scripts
+      - name: PostgreSQL client (must be ≥ the server version)
+        run: |
+          sudo install -d /usr/share/postgresql-common/pgdg
+          sudo curl -fsSo /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client-17
+      - name: Backup
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          BACKUP_DIR: ./backups
+        run: PATH=/usr/lib/postgresql/17/bin:$PATH bash scripts/backup/backup.sh
+      - name: Upload off-site
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ENDPOINT_URL: ${{ secrets.AWS_ENDPOINT_URL }}
+        run: |
+          DIR=$(ls -d backups/*/ | tail -1)
+          aws s3 cp --recursive "$DIR" "s3://${{ secrets.BACKUP_S3_BUCKET }}/daily/$(basename "$DIR")/"

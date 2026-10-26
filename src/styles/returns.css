@@ -1,0 +1,188 @@
+/* =========================================================================
+   Return request — buyer-facing return form.
+   Shares the tokens declared in film.css / store.css so it reads as part of
+   the same storefront, not a separate tool.
+   ========================================================================= */
+
+.st-ret { padding: clamp(92px, 10vw, 118px) 0 90px; position: relative; }
+.st-ret .st-wrap { position: relative; z-index: 1; }
+.st-ret::before {
+  content: "";
+  position: absolute;
+  inset-inline-end: -180px;
+  top: -140px;
+  width: 520px;
+  height: 520px;
+  border-radius: 999px;
+  background: var(--grad-orb);
+  filter: blur(50px);
+  opacity: .45;
+  pointer-events: none;
+}
+
+.st-od-acts { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.st-ret-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+.st-ret-main { display: flex; flex-direction: column; gap: 18px; }
+.st-ret-aside { display: flex; flex-direction: column; gap: 18px; align-self: start; position: sticky; top: 96px; }
+
+.st-ret-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 20px;
+}
+.st-ret-card h3 { margin: 0; font-size: 16px; font-weight: 700; }
+.st-ret-card .sub { margin: 6px 0 0; font-size: 12.5px; color: var(--muted); line-height: 1.7; }
+.st-ret-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap; margin-bottom: 4px;
+}
+.st-ret-count {
+  font-size: 12.5px; font-weight: 700; white-space: nowrap;
+  padding: 6px 12px; border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg));
+  color: var(--accent);
+}
+
+/* ------------------------------------------------------------ item picker */
+.st-ret-items { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.st-ret-items li {
+  display: flex; align-items: center; gap: 13px;
+  border: 1px solid var(--line); border-radius: 13px; padding: 11px 13px;
+  background: var(--bg);
+  transition: border-color .2s ease, background .2s ease;
+}
+.st-ret-items li.is-on {
+  border-color: color-mix(in srgb, var(--accent) 46%, transparent);
+  background: color-mix(in srgb, var(--accent) 6%, var(--bg));
+}
+.st-ret-items .pic {
+  width: 56px; height: 56px; flex: 0 0 56px; border-radius: 11px;
+  overflow: hidden; background: var(--surface);
+}
+.st-ret-items .pic img { width: 100%; height: 100%; object-fit: cover; }
+.st-ret-items .body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.st-ret-items .body b { font-size: 13.5px; font-weight: 600; line-height: 1.5; }
+.st-ret-items .fac { font-size: 12px; color: var(--accent2); display: flex; align-items: center; gap: 4px; }
+.st-ret-items .meta { font-size: 12px; color: var(--muted); }
+.st-ret-items .amt {
+  min-width: 80px; text-align: end; font-weight: 700; font-size: 13.5px; color: var(--text);
+}
+.st-ret-qty {
+  display: inline-flex; align-items: center;
+  border: 1px solid var(--line); border-radius: 999px;
+  overflow: hidden; background: var(--surface);
+}
+.st-ret-qty button {
+  width: 34px; height: 36px; border: none; background: transparent; cursor: pointer;
+  color: var(--text); font-size: 15px; display: flex; align-items: center; justify-content: center;
+}
+.st-ret-qty button:hover:not(:disabled) { background: color-mix(in srgb, var(--text) 6%, transparent); }
+.st-ret-qty button:disabled { opacity: .35; cursor: not-allowed; }
+.st-ret-qty span { min-width: 34px; text-align: center; font-weight: 700; font-size: 13.5px; }
+
+/* --------------------------------------------------------------- reasons */
+.st-ret-reasons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.st-ret-reason {
+  display: flex; align-items: center; gap: 9px;
+  font-family: var(--font-body); font-size: 13.5px; text-align: start;
+  color: var(--text); background: var(--bg);
+  border: 1px solid var(--line); border-radius: 12px;
+  padding: 12px 14px; cursor: pointer;
+  transition: border-color .2s ease, background .2s ease, color .2s ease;
+}
+.st-ret-reason i { font-size: 17px; color: var(--muted); }
+.st-ret-reason:hover { border-color: var(--line-strong); }
+.st-ret-reason.is-on {
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg));
+  color: var(--accent); font-weight: 600;
+}
+.st-ret-reason.is-on i { color: var(--accent); }
+
+.st-ret-note { display: block; margin-top: 18px; }
+.st-ret-note > span { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+.st-ret-note textarea {
+  width: 100%; border: 1px solid var(--line); border-radius: 12px;
+  background: var(--bg); color: var(--text);
+  font-family: var(--font-body); font-size: 13.5px; line-height: 1.8;
+  padding: 12px 14px; resize: vertical; outline: none;
+}
+.st-ret-note textarea:focus { border-color: var(--accent); }
+.st-ret-note em {
+  display: block; margin-top: 6px; font-style: normal;
+  font-size: 11.5px; color: var(--muted); text-align: end;
+}
+
+/* --------------------------------------------------------------- summary */
+.st-ret-card.is-sum { background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface) 60%); }
+.st-ret-rows { margin: 16px 0 18px; display: flex; flex-direction: column; gap: 10px; }
+.st-ret-rows .row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; font-size: 13.5px; color: var(--muted); }
+.st-ret-rows .row b { color: var(--text); font-weight: 600; }
+.st-ret-rows .row b.neg { color: #a3341f; }
+.st-ret-rows .row.total {
+  border-top: 1px dashed var(--line); padding-top: 12px; margin-top: 2px;
+  font-size: 14px; color: var(--text); font-weight: 700;
+}
+.st-ret-rows .row.total b { font-size: 19px; color: var(--accent); }
+
+.st-ret-err {
+  display: flex; align-items: flex-start; gap: 7px;
+  font-size: 12.5px; line-height: 1.7; color: #a3341f;
+  background: color-mix(in srgb, #a3341f 10%, var(--bg));
+  border: 1px solid color-mix(in srgb, #a3341f 26%, transparent);
+  border-radius: 10px; padding: 10px 12px; margin: 0 0 12px;
+}
+.st-ret-err i { font-size: 16px; }
+
+.st-ret-policy {
+  display: flex; gap: 8px; align-items: flex-start;
+  font-size: 12px; line-height: 1.75; color: var(--muted); margin: 14px 0 0;
+}
+.st-ret-policy i { color: var(--accent2); font-size: 15px; }
+
+.st-ret-steps { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.st-ret-steps li { display: flex; gap: 10px; align-items: flex-start; font-size: 12.5px; line-height: 1.7; color: var(--muted); }
+.st-ret-steps i { color: var(--accent); font-size: 17px; }
+
+/* ------------------------------------------------------------ issued state */
+.st-ret-done {
+  max-width: 780px; margin: 26px auto; text-align: center;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 20px; padding: clamp(28px, 5vw, 48px);
+}
+.st-ret-done .ic {
+  width: 62px; height: 62px; border-radius: 18px; margin-bottom: 14px;
+  display: inline-flex; align-items: center; justify-content: center; font-size: 28px;
+  background: color-mix(in srgb, var(--accent) 14%, var(--bg)); color: var(--accent);
+}
+.st-ret-done .eyebrow { font-size: 12px; letter-spacing: .07em; color: var(--accent2); font-weight: 700; margin: 0 0 8px; }
+.st-ret-done h1 { font-family: var(--font-heading); font-size: clamp(22px, 3vw, 30px); margin: 0 0 10px; }
+.st-ret-done .sub { color: var(--muted); font-size: 14px; line-height: 1.8; margin: 0 auto; max-width: 56ch; }
+.st-ret-donegrid {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px; background: var(--line); border: 1px solid var(--line);
+  border-radius: 12px; overflow: hidden; margin: 26px 0 22px;
+}
+.st-ret-donegrid > div { background: var(--bg); padding: 14px 12px; display: flex; flex-direction: column; gap: 5px; text-align: start; }
+.st-ret-donegrid span { font-size: 11.5px; color: var(--muted); }
+.st-ret-donegrid b { font-size: 14px; font-weight: 700; }
+.st-ret-doneacts { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.st-ret-done .fine { font-size: 12px; color: var(--muted); margin-top: 18px; line-height: 1.75; }
+
+@media (max-width: 1024px) {
+  .st-ret-grid { grid-template-columns: 1fr; }
+  .st-ret-aside { position: static; }
+}
+@media (max-width: 640px) {
+  .st-ret-reasons { grid-template-columns: 1fr; }
+  .st-ret-donegrid { grid-template-columns: 1fr 1fr; }
+  .st-ret-items li { flex-wrap: wrap; }
+  .st-ret-items .amt { min-width: 0; }
+}

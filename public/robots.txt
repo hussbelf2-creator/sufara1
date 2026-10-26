@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /checkout
+Disallow: /cart
+Disallow: /orders
+
+Sitemap: https://safeer.sa/sitemap.xml
